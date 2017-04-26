@@ -1,0 +1,65 @@
+﻿@model ltracker.Models.MenuItemListViewModel
+
+@{
+    ViewBag.Title = "MenuItems";
+}
+
+<h2>MenuItems</h2>
+
+<p>
+    
+   
+
+    <br />
+    <div class="panel">
+        <b>Key</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        @Html.DisplayFor(x => x.MenuKey)<br />
+        <b>Name</b>&nbsp;
+        @Html.DisplayFor(x => x.MenuName)<br />
+    </div>
+
+    @Html.HiddenFor(x => x.MenuKey)
+    @Html.HiddenFor(x => x.MenuName)
+</p>
+
+<p>
+    @Html.ActionLink("Nuevo Item", "CreateMenuItem", new { id = Model.MenuKey })
+</p>
+
+
+    <ul class="list-group">
+        @{ 
+            var parents = Model.MenuItems.Where(x => x.ParentId == null);
+            var parentsId = parents.Select(x => x.Id).ToArray();
+        }
+        @foreach (var item in parents)
+        {
+        <li class="list-group-item">
+            @item.Order - @item.Name <div class="pull-right">
+    @Html.ActionLink("Edit", "EditMenuItem", new { id = item.Id })
+</div>
+            @{
+                var childs = Model.MenuItems.Where(x => x.ParentId == item.Id).OrderBy(x=>x.Order);
+                <ul class="list-group">
+                    @foreach (var child in childs) {
+                    <li style="margin-left:5em" class="list-group-item">&nbsp;&nbsp;&nbsp;@child.Order - @child.Name
+                    <div class="pull-right">
+                        @Html.ActionLink("Edit", "EditMenuItem", new { id = child.Id })
+                    </div>
+                    </li>
+                    }
+                </ul >
+                }
+        </li>
+        }
+
+       
+</ul>
+    @if (Model.MenuItems.Count == 0) {
+        <tr><td colspan="4">
+            <span class="alert text-info text-center">
+                Este menu no tiene elementos
+            </span>
+            </td>
+        </tr>
+    }

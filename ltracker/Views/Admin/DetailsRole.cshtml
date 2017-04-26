@@ -1,0 +1,48 @@
+﻿@model ltracker.Models.DetailsAppRoleViewModel
+
+@{
+    ViewBag.Title = "DetailsRole";
+}
+
+<h2>Detalle Rol</h2>
+
+<div class="row">
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        
+    </dl>
+ 
+                @{ var resources = Model.Permissions.Select(x => x.ResourceName).Distinct();
+
+                    foreach (var res in resources)
+                    {
+                        <div class="col-md-3">
+                        <div class="table table-bordered col-md-3">
+                            <b> @res</b>
+                            <ul>
+                                @foreach (var perm in Model.Permissions)
+                                {
+                                    if (perm.ResourceName != res) { continue; }
+                                    <li> @perm.ActionName</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    }
+                }
+
+
+</div>
+<div class="row">
+    <p>
+        @Html.ActionLink("Edit", "EditRole", new { id = Model.Id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</div>
